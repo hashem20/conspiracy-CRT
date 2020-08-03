@@ -4,10 +4,9 @@
 
 % August 02, 2020
 
-
 %%
 clear all; clc;
-[A, title, ~] = xlsread ('/corona/data_conspiracy_crt.xlsx'); 
+[A, title, ~] = xlsread ('/data_conspiracy_crt.xlsx'); 
 n = size(A, 1);
 %%
 label(1, 3) = {'China built'};
@@ -30,6 +29,7 @@ AZriver = [7, 104, 115]/256;
 AZsand = [241, 158, 31]/256;
 AZmesa = [183, 85, 39]/256;
 AZbrick = [74, 48, 39]/256;
+
 %% intuitive responses
 for i=1:n
     intuition(i,1) = (A(i,13) == 10 );
@@ -40,6 +40,7 @@ intuition = double(intuition)
 intuition(:,4) = intuition(:,1) + intuition(:,2) + intuition(:,3)
 l(1) = {'Intuition-1'}; l(2) = {'Intuition-2'}; 
 l(3) = {'Intuition-3'}; l(4) = {'Intuition'}; 
+
 %% reflective responses
 for i=1:n
     reflection(i,1) = (A(i,13) == 5 );
@@ -54,11 +55,13 @@ l(7) = {'Reflection-3'}; l(8) = {'Reflection'};
 %% gender
 males = sum(A(:,16)==1)
 females = sum(A(:,16)==2)
+
 %% age
 age_mean = mean(A(:,17))
 age_median = median(A(:,17))
 age_min = min(A(:,17))
 age_max = max(A(:,17))
+
 %% language chosen, FA or EN
 for i=1:n
     if title{i+1,2} == 'FA'
@@ -90,6 +93,7 @@ for i=16:19
         xticklabels({'<H', 'H', '<2y', '2y', '4y', 'G'});
     end
 end
+
 %% Figure 2 --- Histograms Beliefs 
 figure(2);
 for i=3:12
@@ -98,6 +102,7 @@ for i=3:12
     set(gca,'fontsize',10);
     xlabel(label{1,i}, 'FontSize', 15)
 end
+
 %% Figure 3 --- Histograms CRT 
 figure(3);
 subplot(1,2,1)
@@ -118,6 +123,7 @@ for i=1:10
     table1(i).Mean = nanmean(A(:,i+2));
     table1(i).SD = nanstd(A(:,i+2));
 end
+
 %% Table 2
 intuition = double(intuition)
 reflection = double(reflection)
@@ -128,6 +134,7 @@ for i=1:4
     table2(i).Mean = nanmean(intuition(:,i));
     table2(i).SD = nanstd(intuition(:,i));
 end
+
 for i=5:8
     table2(i).trait = l(i);
     table2(i).Min = nanmin(reflection(:,i-4));
@@ -142,6 +149,7 @@ for i=1:n
     blank(i,2) = isnan(A(i,14));
     blank(i,3) = isnan(A(i,15));
 end
+
 blank = double(blank);
 blank(:,4) = blank(:,1)+blank(:,2)+blank(:,3);
 
@@ -170,6 +178,7 @@ h = bar(X, y, 'group');
 box off;
 a = (1:size(y,1)).';
 x = [a-0.27 a-.09 a+.09 a+0.27];
+
 for k=1:size(y,1)
     for m = 1:size(y,2)
         text(x(k,m),y(k,m),[num2str(y(k,m),'%0.1f') '%'],...
@@ -177,6 +186,7 @@ for k=1:size(y,1)
             'VerticalAlignment','bottom', 'fontsize',15)
     end
 end
+
 h(1).FaceColor = AZblue;
 h(2).FaceColor = AZred;
 h(3).FaceColor = AZmesa;
@@ -184,16 +194,14 @@ h(4).FaceColor = AZbrick;
 legend show;
 legend('Correct', 'Intuitive', 'Other', 'Blank', 'Box', 'off', 'Position', [.85 .84 .1 .05]);
 set(gca, 'fontsize', 25);
-% set(gca,'Tickdir','out')
 set(gca,'TickLength',[0 0]);
-% xticklabels({'Bat', 'Machine', 'Lake'});
 xlabel('Cognitive Reflection Test items');
 ylabel('Percentage of Answering');
 
 %% Table 3: Correlation Matrix (10 statements)
 [table3, p_table3] = corrcoef(A(:,3:12))
 
-%% Figure 5: correlations between CRT and Conspiracy/Founder reflection
+%% Figure 5: correlations between CRT and Conspiracy/Founded beliefs
 conspiracy = sum([A(:,3:6) A(:,9) A(:,12)],2)/6;
 conspiracy_max = max([A(:,3:6) A(:,9) A(:,12)],[],2);
 figure(5);
@@ -269,3 +277,5 @@ for i=1:10
     table4(i).r2 = r2;
     table4(i).p2 = p2;
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
